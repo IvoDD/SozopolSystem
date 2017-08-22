@@ -1,0 +1,27 @@
+{
+  "name": "sozopol_system",
+  "version": "0.1.0",
+  "description": "a system",
+  "main": "server.js",
+  "scripts": {
+    "test": "node server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/IvoDD/SozopolSystem.git"
+  },
+  "author": "Ivo Dilov",
+  "license": "GPL-3.0",
+  "bugs": {
+    "url": "https://github.com/IvoDD/SozopolSystem/issues"
+  },
+  "homepage": "https://github.com/IvoDD/SozopolSystem#readme",
+  "dependencies": {
+    "bootstrap": "^3.3.7",
+    "crypto": "^1.0.1",
+    "express": "^4.15.4",
+    "jquery": "^3.2.1",
+    "mysql": "^2.14.1",
+    "socket.io": "^2.0.3"
+  }
+}
