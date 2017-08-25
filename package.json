@@ -10,7 +10,7 @@
     "type": "git",
     "url": "git+https://github.com/IvoDD/SozopolSystem.git"
   },
-  "author": "Ivo Dilov",
+  "author": "Ivo Dilov, Daniel Atanasov",
   "license": "GPL-3.0",
   "bugs": {
     "url": "https://github.com/IvoDD/SozopolSystem/issues"
