@@ -17,6 +17,7 @@
   },
   "homepage": "https://github.com/IvoDD/SozopolSystem#readme",
   "dependencies": {
+    "body-parser": "^1.17.2",
     "bootstrap": "^3.3.7",
     "crypto": "^1.0.1",
     "express": "^4.15.4",
