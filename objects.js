@@ -1,7 +1,8 @@
 class Player{
-    constructor(id, name, comb, geo, numb, alg){
+    constructor(id, name, team_id, comb, geo, numb, alg){
         this.id = id;
         this.name = name;
+        this.team_id = team_id;
         this.comb = comb;
         this.geo = geo;
         this.numb = numb;
@@ -31,4 +32,4 @@ class Battle {};
 class Protocol {};
 class Judge {};
 
-module.exports = {Team: Team, Competition: Competition, Battle: Battle, Judge: Judge};
+module.exports = {Player: Player, Team: Team, Competition: Competition, Battle: Battle, Judge: Judge};

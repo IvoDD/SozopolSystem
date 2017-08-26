@@ -30,21 +30,25 @@
         </div>
         <div id="navbar" class="collapse navbar-collapse">
           <ul id="nav" class="nav navbar-nav">
-            <li class="active" id="r"><a href="#" onclick="">Резултати</a></li>
-            <li id="b"><a href="#battles" onclick="">Боеве</a></li>
-            <li id="j"><a href="#judge" onclick="">Жури</a></li>
+            <li class="active" id="r"><a href="#" onclick="changeTab('r');">Резултати</a></li>
+            <li id="b"><a href="#battles" onclick="changeTab('b');">Боеве</a></li>
+            <li id="j"><a href="#judge" onclick="changeTab('j');">Жури</a></li>
           </ul>
         </div><!--/.nav-collapse -->
       </div>
     </nav>
 
     <div class="container" id="block_results" style="margin-top:51px; padding-top:20px">
-
-      <div>
         <h1>Резултати</h1>
-      </div>
+    </div>
 
-    </div><!-- /.container -->
+    <div class="container" id="block_battles" style="margin-top:51px; padding-top:20px; display:none;">
+        <h1>Боеве</h1>
+    </div>
+      
+    <div class="container" id="block_judge" style="margin-top:51px; padding-top:20px; display:none;">
+        <h1>Жури</h1>
+    </div>
       
     <!-- Bootstrap core JavaScript
     ================================================== -->
@@ -53,6 +57,9 @@
     <script>window.jQuery || document.write('<script src="/js/jquery.min.js"><\/script>')</script>
     <script src="/js/bootstrap.min.js"></script>
     <script src="socket.io/socket.io.js"></script>
+    <script src="connection.js"></script>
+    <script src="view.js"></script>
+    <!--<script src="connection.js"></script>-->
     <!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
     <!--<script src="/js/ie10-viewport-bug-workaround.js"></script>-->
   </body>

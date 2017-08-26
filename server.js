@@ -33,7 +33,12 @@ function handleDisconnect() {
 handleDisconnect();
 
 var competitions = [];
-database.loadCompetitions(connection, competitions);
+database.loadCompetitions(connection, competitions, () => {
+    //console.log(competitions);
+    for (let i=0; i<competitions.length; ++i){
+        runServer(competitions[i]);
+    }
+});
 
 function runServer(competition){
     let express = require("express");
@@ -45,8 +50,25 @@ function runServer(competition){
     app.get("/", (req, res) => {
         res.sendFile(__dirname + "/views/index.html");
     });
+    app.get("/objects.js", (req, res) => {
+        res.sendFile(__dirname + "/objects.js");
+    });
+    app.get("/*", (req, res) => {
+        res.sendFile(__dirname + "/views" + req.url);
+    });
+    
+    let players = [], indForPid = [];
+    let teams = [], indForTid = [];
+    let battles = [], indForBid = [];
+    database.loadPlayers(connection, competition.id, players, indForPid, () => {console.log(players, indForPid);});
+    database.loadTeams(connection, competition.id, teams, indForTid);
+    database.loadBattles(connection, competition.id, battles, indForBid);
+    
+    io.on('connection', (socket) => {
+        socket.emit('init', competition.name, players, indForPid, teams, indForTid, battles, indForBid);
+    });
 
-    http.listen(3000, () => {
+    http.listen(competition.port, () => {
         console.log("server started");
-});
+    });
 }
