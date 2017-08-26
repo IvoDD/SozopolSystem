@@ -28,7 +28,17 @@ class Competition {
     }
 };
 
-class Battle {};
+class Battle {
+    constructor(id, day, team1, team2, points1, points2, judges){
+        this.id = id;
+        this.day = day;
+        this.team1 = team1;
+        this.team2 = team2;
+        this.points1 = points1;
+        this.points2 = points2;
+        this.judges = judges;
+    }
+};
 class Protocol {};
 class Judge {};
 

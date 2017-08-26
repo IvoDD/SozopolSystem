@@ -60,8 +60,9 @@ function runServer(competition){
     let players = [], indForPid = [];
     let teams = [], indForTid = [];
     let battles = [], indForBid = [];
-    database.loadPlayers(connection, competition.id, players, indForPid, () => {console.log(players, indForPid);});
-    database.loadTeams(connection, competition.id, teams, indForTid);
+    database.loadPlayers(connection, competition.id, players, indForPid, () => {
+        database.loadTeams(connection, competition.id, players, teams, indForTid);
+    });
     database.loadBattles(connection, competition.id, battles, indForBid);
     
     io.on('connection', (socket) => {
