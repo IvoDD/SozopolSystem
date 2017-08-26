@@ -1,6 +1,6 @@
 var exports = module.exports = {};
 
-var bodyParser = require("body-parser");
+const bodyParser = require("body-parser");
 
 exports.handle = function(express, app){
     
