@@ -3,25 +3,27 @@ var mysql = require('mysql');
 
 var key = "this is a random key";
 
-class Admin{
+class Judge{
     constructor (connection, name, username, password, reg=0, callback){
-        this.name = name;
         this.username = username;
         //this.id = -1;
         if (reg){
-            this.salt = Admin.genSalt(64);
-            this.saltedHash = Admin.calcSaltedHash(password, this.salt);
+            this.name = name;
+            this.salt = Judge.genSalt(64);
+            this.saltedHash = Judge.calcSaltedHash(password, this.salt);
             connection.query("INSERT INTO judges (name, username, passhash, salt) VALUES (?, ?, ?, ?)", [this.name, this.username, this.saltedHash, this.salt], function(err){
                 if (err){callback(false);}
                 else{callback(true);}
             });
         }else{
-            connection.query("SELECT * FROM admins WHERE username = ?", this.username, function(err, rows, fields){
+            connection.query("SELECT * FROM judges WHERE username = ?", this.username, function(err, rows, fields){
                 if (err || rows.length == 0){callback(false); return;}
                 this.id = rows[0].id;
+                this.name = name;
                 this.salt = rows[0].salt;
-                this.saltedHash = Admin.calcSaltedHash(password, this.salt);
-                callback(this.saltedHash == rows[0].salted_hash, this.id);
+                this.saltedHash = Judge.calcSaltedHash(password, this.salt);
+                this.isAdmin = rows[0].is_admin;
+                callback(this.saltedHash == rows[0].passhash);
             });
         }
     }
@@ -36,9 +38,9 @@ class Admin{
     
     static calcSaltedHash (password, salt){
         let hash = crypto.createHmac('sha512', key);
-        hash.update(password+hash);
+        hash.update(password+salt);
         return hash.digest('hex');
     }
 }
 
-module.exports = {"Admin": Admin}
+module.exports = {"Judge": Judge}

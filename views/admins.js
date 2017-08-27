@@ -6,5 +6,5 @@ socket.on('result', function(success){
 })
 
 function register(){
-    socket.emit('register', document.getElementById("inputEmail").value, document.getElementById("inputPassword").value);
+    socket.emit('register', document.getElementById("inputName").value, document.getElementById("inputUsername").value, document.getElementById("inputPassword").value);
 }

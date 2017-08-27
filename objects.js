@@ -1,7 +1,8 @@
 class Player{
-    constructor(id, name, comb, geo, numb, alg){
+    constructor(id, name, team_id, comb, geo, numb, alg){
         this.id = id;
         this.name = name;
+        this.team_id = team_id;
         this.comb = comb;
         this.geo = geo;
         this.numb = numb;
@@ -18,6 +19,9 @@ class Team {
         this.point_difference = point_difference;
     }
 };
+function cmpTeams(t1, t2){
+    return (t1.points == t2.points && t1.point_difference > t2.point_difference) || t1.points > t2.points;
+}
 
 class Competition {
     constructor(id, name, port){
@@ -27,8 +31,19 @@ class Competition {
     }
 };
 
-class Battle {};
+class Battle {
+    constructor(id, day, team1, team2, points1, points2, judges){
+        this.id = id;
+        this.day = day;
+        this.team1 = team1;
+        this.team2 = team2;
+        this.points1 = points1;
+        this.points2 = points2;
+        this.judges = judges;
+    }
+};
 class Protocol {};
-class Judge {};
 
-module.exports = {Team: Team, Competition: Competition, Battle: Battle, Judge: Judge};
+if (typeof module !== 'undefined'){
+    module.exports = {Player: Player, Team: Team, Competition: Competition, Battle: Battle};
+}

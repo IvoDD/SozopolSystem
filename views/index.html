@@ -12,6 +12,8 @@
 
     <link rel="stylesheet" href="/css/bootstrap.min.css">
     <link rel="stylesheet" href="/css/bootstrap-theme.min.css">
+    <link href="template.css" rel="stylesheet">
+    <link href="login.css" rel="stylesheet">
 
   </head>
 
@@ -30,21 +32,42 @@
         </div>
         <div id="navbar" class="collapse navbar-collapse">
           <ul id="nav" class="nav navbar-nav">
-            <li class="active" id="r"><a href="#" onclick="">Резултати</a></li>
-            <li id="b"><a href="#battles" onclick="">Боеве</a></li>
-            <li id="j"><a href="#judge" onclick="">Жури</a></li>
+            <li class="active" id="r"><a href="#" onclick="changeTab('r');">Резултати</a></li>
+            <li id="b"><a href="#battles" onclick="changeTab('b');">Боеве</a></li>
+            <li id="j"><a href="#judge" onclick="changeTab('j');">Жури</a></li>
           </ul>
         </div><!--/.nav-collapse -->
       </div>
     </nav>
 
-    <div class="container" id="block_results" style="margin-top:51px; padding-top:20px">
-
-      <div>
+    <div class="container" id="block_results">
         <h1>Резултати</h1>
-      </div>
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th>Отбор</th>
+                    <th>Точки</th>
+                    <th>+/-</th>
+                </tr>
+            </thead>
+            <tbody id="results"></tbody>
+        </table>
+    </div>
 
-    </div><!-- /.container -->
+    <div class="container" id="block_battles" style="display:none;">
+        <h1>Боеве</h1>
+    </div>
+      
+    <div class="container" id="block_judge" style="display:none;">
+        <form class="form-signin" onsubmit="return login();">
+            <h2 class="form-signin-heading">Log in (for judges)</h2>
+            <label for="inputUsername" class="sr-only">Username</label>
+            <input type="text" id="inputUsername" class="form-control" placeholder="Username" required autofocus>
+            <label for="inputPassword" class="sr-only">Password</label>
+            <input type="password" id="inputPassword" class="form-control" placeholder="Password" required>
+            <input class="btn btn-lg btn-primary btn-block" type="submit" value="Sign in">
+        </form>
+    </div>
       
     <!-- Bootstrap core JavaScript
     ================================================== -->
@@ -53,6 +76,10 @@
     <script>window.jQuery || document.write('<script src="/js/jquery.min.js"><\/script>')</script>
     <script src="/js/bootstrap.min.js"></script>
     <script src="socket.io/socket.io.js"></script>
+    <script src="objects.js"></script>
+    <script src="view.js"></script>
+    <script src="connection.js"></script>
+    <!--<script src="connection.js"></script>-->
     <!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
     <!--<script src="/js/ie10-viewport-bug-workaround.js"></script>-->
   </body>
