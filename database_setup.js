@@ -75,13 +75,13 @@ function startServer(){
     
     app.post('/register', function(req, res){
         let current;
-        current = new Admin(connection, 'Daniel Atanasov' + Math.random(), req.body.username, req.body.password, 1, function(success){
+        current = new Judge(connection, req.body.name, req.body.username, req.body.password, 1, function(success){
             if (success){res.send("Success");}
             else{res.send("Username taken");}
         });
     });
     
-    var Admin = require('./Admin.js').Admin;
+    var Judge = require('./Admin.js').Judge;
     
     http.listen(4000, function(){
         console.log("admin signup started on: 127.0.0.1:4000"); 
