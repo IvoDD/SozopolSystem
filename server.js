@@ -70,6 +70,6 @@ function runServer(competition){
     });
 
     http.listen(competition.port, () => {
-        console.log("server started");
+        console.log(competition.name + " on port " + competition.port);
     });
 }

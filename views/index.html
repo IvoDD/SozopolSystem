@@ -40,6 +40,16 @@
 
     <div class="container" id="block_results" style="margin-top:51px; padding-top:20px">
         <h1>Резултати</h1>
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th>Отбор</th>
+                    <th>Точки</th>
+                    <th>+/-</th>
+                </tr>
+            </thead>
+            <tbody id="results"></tbody>
+        </table>
     </div>
 
     <div class="container" id="block_battles" style="margin-top:51px; padding-top:20px; display:none;">
@@ -57,8 +67,9 @@
     <script>window.jQuery || document.write('<script src="/js/jquery.min.js"><\/script>')</script>
     <script src="/js/bootstrap.min.js"></script>
     <script src="socket.io/socket.io.js"></script>
-    <script src="connection.js"></script>
+    <script src="objects.js"></script>
     <script src="view.js"></script>
+    <script src="connection.js"></script>
     <!--<script src="connection.js"></script>-->
     <!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
     <!--<script src="/js/ie10-viewport-bug-workaround.js"></script>-->

@@ -19,6 +19,9 @@ class Team {
         this.point_difference = point_difference;
     }
 };
+function cmpTeams(t1, t2){
+    return (t1.points == t2.points && t1.point_difference > t2.point_difference) || t1.points > t2.points;
+}
 
 class Competition {
     constructor(id, name, port){
@@ -42,4 +45,6 @@ class Battle {
 class Protocol {};
 class Judge {};
 
-module.exports = {Player: Player, Team: Team, Competition: Competition, Battle: Battle, Judge: Judge};
+if (typeof module !== 'undefined'){
+    module.exports = {Player: Player, Team: Team, Competition: Competition, Battle: Battle, Judge: Judge};
+}
