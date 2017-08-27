@@ -9,6 +9,7 @@ const db_config = {
 
 const gets = require("./get_handler.js");
 const database = require("./database_access.js");
+const Judge = require("./Admin.js").Judge;
 
 var connection;
 
@@ -66,7 +67,16 @@ function runServer(competition){
     database.loadBattles(connection, competition.id, battles, indForBid);
     
     io.on('connection', (socket) => {
+        let currentJudge;
+        let success = 0;
         socket.emit('init', competition.name, players, indForPid, teams, indForTid, battles, indForBid);
+        
+        socket.on('login', (loginData) => {
+            currentJudge = new Judge(connection, "", loginData.username, loginData.password, 0, (succ) => {
+                success = succ;
+                socket.emit('l', succ, succ && currentJudge.isAdmin);
+            });
+        });
     });
 
     http.listen(competition.port, () => {

@@ -69,8 +69,8 @@ function startServer(){
         res.sendFile(__dirname + '/views/admins.html');
     });
     
-    app.get('/admins.js',function(req, res){
-        res.sendFile(__dirname + '/views/admins.js');
+    app.get('/*',function(req, res){
+        res.sendFile(__dirname + '/views' + req.url);
     });
     
     app.post('/register', function(req, res){

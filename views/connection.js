@@ -2,6 +2,7 @@ var socket = io();
 var players, indForPid;
 var teams, indForTid;
 var battles, indForBid;
+var judge = 0, admin = 0;
 
 socket.on('init', (competitionName, _players, _indForPid, _teams, _indForTid, _battles, _indForBid)=>{
     setUp(competitionName);
@@ -26,3 +27,15 @@ function sortTeams(){
         }
     }
 }
+
+function login(){
+    socket.emit('login', getSigninData());
+    return false;
+}
+socket.on('l', (success, isAdmin) => {
+    judge = success;
+    admin = isAdmin;
+    console.log(success);
+    if (!success){alert("Wrong username or password");}
+    else{}
+});

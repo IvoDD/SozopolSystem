@@ -38,3 +38,12 @@ function redoResults(){
         results.appendChild(teamTR(i));
     }
 }
+
+function getSigninData(){
+    let ans = {};
+    ans.username = document.getElementById('inputUsername').value;
+    document.getElementById('inputUsername').value = "";
+    ans.password = document.getElementById('inputPassword').value;
+    document.getElementById('inputPassword').value = "";
+    return ans;
+}

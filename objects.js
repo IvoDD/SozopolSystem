@@ -43,8 +43,7 @@ class Battle {
     }
 };
 class Protocol {};
-class Judge {};
 
 if (typeof module !== 'undefined'){
-    module.exports = {Player: Player, Team: Team, Competition: Competition, Battle: Battle, Judge: Judge};
+    module.exports = {Player: Player, Team: Team, Competition: Competition, Battle: Battle};
 }

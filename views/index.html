@@ -12,6 +12,8 @@
 
     <link rel="stylesheet" href="/css/bootstrap.min.css">
     <link rel="stylesheet" href="/css/bootstrap-theme.min.css">
+    <link href="template.css" rel="stylesheet">
+    <link href="login.css" rel="stylesheet">
 
   </head>
 
@@ -38,7 +40,7 @@
       </div>
     </nav>
 
-    <div class="container" id="block_results" style="margin-top:51px; padding-top:20px">
+    <div class="container" id="block_results">
         <h1>Резултати</h1>
         <table class="table table-striped">
             <thead>
@@ -52,12 +54,19 @@
         </table>
     </div>
 
-    <div class="container" id="block_battles" style="margin-top:51px; padding-top:20px; display:none;">
+    <div class="container" id="block_battles" style="display:none;">
         <h1>Боеве</h1>
     </div>
       
-    <div class="container" id="block_judge" style="margin-top:51px; padding-top:20px; display:none;">
-        <h1>Жури</h1>
+    <div class="container" id="block_judge" style="display:none;">
+        <form class="form-signin" onsubmit="return login();">
+            <h2 class="form-signin-heading">Log in (for judges)</h2>
+            <label for="inputUsername" class="sr-only">Username</label>
+            <input type="text" id="inputUsername" class="form-control" placeholder="Username" required autofocus>
+            <label for="inputPassword" class="sr-only">Password</label>
+            <input type="password" id="inputPassword" class="form-control" placeholder="Password" required>
+            <input class="btn btn-lg btn-primary btn-block" type="submit" value="Sign in">
+        </form>
     </div>
       
     <!-- Bootstrap core JavaScript
