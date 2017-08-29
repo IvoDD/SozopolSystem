@@ -72,9 +72,10 @@ function runServer(competition){
         socket.emit('init', competition.name, players, indForPid, teams, indForTid, battles, indForBid);
         
         socket.on('login', (loginData) => {
-            currentJudge = new Judge(connection, "", loginData.username, loginData.password, 0, (succ) => {
+            currentJudge = new Judge(connection, "", loginData.username, loginData.password, 0, (succ, curr) => {
                 success = succ;
-                socket.emit('l', succ, succ && currentJudge.isAdmin);
+                currentJudge = curr;
+                socket.emit('l', succ, (succ && currentJudge.isAdmin));
             });
         });
     });

@@ -28,15 +28,49 @@ function teamTR(ind){
     for (let i=0; i<td.length; ++i){tr.appendChild(td[i]);}
     return tr;
 }
-function battleTR(ind){
+function battleTR(battle){
     let tr = document.createElement('tr');
     let td = [document.createElement('td'), document.createElement('td'), document.createElement('td'), document.createElement('td')];
-    td[0].appendChild(document.createTextNode(teams[indForTid[battles[ind].team1]].name));
-    td[1].appendChild(document.createTextNode(battles[ind].points1));
-    td[2].appendChild(document.createTextNode(battles[ind].points2));
-    td[3].appendChild(document.createTextNode(teams[indForTid[battles[ind].team2]].name));
+    td[0].appendChild(document.createTextNode(teams[indForTid[battle.team1]].name));
+    td[1].appendChild(document.createTextNode(battle.points1));
+    td[2].appendChild(document.createTextNode(battle.points2));
+    if (battle.points1==0 && battle.points2==0){
+        td[1].firstChild.nodeValue = "-";
+        td[2].firstChild.nodeValue = "-";
+    }
+    td[3].appendChild(document.createTextNode(teams[indForTid[battle.team2]].name));
     for (let i=0; i<td.length; ++i){tr.appendChild(td[i]);}
     return tr;
+}
+function createDayTable(day){
+    let ret = {};
+    let elem = document.createElement('h2');
+    elem.appendChild(document.createTextNode("Ден " + day));
+    ret.heading = elem;
+    let table = document.createElement('table');
+    ret.table = table;
+    table.setAttribute("class", "table table-bordered");
+    table.style.textAlign = "center";
+    table.style.maxWidth = "800px";
+    //table.style.margin = "auto";
+    let head = document.createElement('thead');
+    let row = document.createElement('tr');
+    elem = document.createElement('td');
+    elem.appendChild(document.createTextNode("Отбор"));
+    row.appendChild(elem);
+    elem = document.createElement('td');
+    elem.appendChild(document.createTextNode("Резултат"));
+    elem.colSpan = 2;
+    row.appendChild(elem);
+    elem = document.createElement('td');
+    elem.appendChild(document.createTextNode("Отбор"));
+    row.appendChild(elem);
+    head.appendChild(row);
+    table.appendChild(head);
+    let body = document.createElement('tbody');
+    table.appendChild(body);
+    ret.body = body;
+    return ret;
 }
 
 function redoResults(){
@@ -56,35 +90,14 @@ function redoBattles(){
     }
     let j = battles.length-1;
     for (let i = day; i>0; --i){
-        let elem = document.createElement('h2');
-        elem.appendChild(document.createTextNode("Ден "+i));
-        battlesDom.appendChild(elem);
-        let table = document.createElement('table');
-        battlesDom.appendChild(table);
-        table.setAttribute("class", "table table-bordered");
-        table.style.textAlign = "center";
-        table.style.maxWidth = "800px";
-        //table.style.margin = "auto";
-        let head = document.createElement('thead');
-        let row = document.createElement('tr');
-        elem = document.createElement('td');
-        elem.appendChild(document.createTextNode("Отбор"));
-        row.appendChild(elem);
-        elem = document.createElement('td');
-        elem.appendChild(document.createTextNode("Резултат"));
-        elem.colSpan = 2;
-        row.appendChild(elem);
-        elem = document.createElement('td');
-        elem.appendChild(document.createTextNode("Отбор"));
-        row.appendChild(elem);
-        head.appendChild(row);
-        table.appendChild(head);
-        let body = document.createElement('tbody');
-        table.appendChild(body);
+        let ret = createDayTable(i);
+        battlesDom.appendChild(ret.heading);
+        battlesDom.appendChild(ret.table);
+        let body = ret.body;
         
         while(j>=0 && battles[j].day == i){--j;}
         for (let k=j+1; k<battles.length && battles[k].day == i; ++k){
-            body.appendChild(battleTR(k));
+            body.appendChild(battleTR(battles[k]));
         }
     }
 }
@@ -96,4 +109,30 @@ function getSigninData(){
     ans.password = document.getElementById('inputPassword').value;
     document.getElementById('inputPassword').value = "";
     return ans;
+}
+
+function loadNewDayBattles(){
+    let battlesDom = document.getElementById("block_battles");
+    let top = battlesDom.firstChild;
+    let ret = createDayTable(day+1);
+    let body = ret.body;
+    body.id = "active_battles";
+    let controlPanel = document.createElement('div');
+    battlesDom.insertBefore(ret.heading, top);
+    battlesDom.insertBefore(ret.table, top);
+    battlesDom.insertBefore(controlPanel, top);
+    let button = document.createElement("button");
+    button.appendChild(document.createTextNode("Generate"));
+    button.addEventListener("click", generateBattles);
+    controlPanel.appendChild(button);
+}
+
+function loadActiveBattles(){
+    let body = document.getElementById("active_battles");
+    while (body.firstChild){
+        body.removeChild(body.firstChild);
+    }
+    for (let i=0; i<activeBattles.length; ++i){
+        body.appendChild(battleTR(activeBattles[i]));
+    }
 }

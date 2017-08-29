@@ -4,6 +4,8 @@ var teams, indForTid;
 var battles, indForBid;
 var judge = 0, admin = 0;
 var day = 0;
+var played = [], used = [], battlePrep = [];
+var activeBattles = [];
 
 socket.on('init', (competitionName, _players, _indForPid, _teams, _indForTid, _battles, _indForBid)=>{
     setUp(competitionName);
@@ -49,6 +51,46 @@ function isDayActive(){
     }
 }
 
+function generateBattles(){
+    battlePrep = [];
+    played = [];
+    for (let i=0; i<teams.length; ++i){
+        played[i] = [];
+        used[i] = 0;
+        for (let j=0; j<teams.length; ++j){
+            played[i][j] = 0;
+        }
+    }
+    for (let i=0; i<battles.length; ++i){
+        played[indForTid[battles[i].team1]][indForTid[battles[i].team2]] = 1;
+        played[indForTid[battles[i].team2]][indForTid[battles[i].team1]] = 1;
+    }
+    if (prepareBattles(0)){
+        activeBattles = [];
+        for (let i=0; i<battlePrep.length; ++i){
+            activeBattles.push(new Battle(-1, day+1, teams[battlePrep[i].f].id, teams[battlePrep[i].s].id, 0, 0, []));
+        }
+        loadActiveBattles();
+    }else{
+        alert("not possible with given restrictions");
+    }
+}
+function prepareBattles(ind){
+    if (ind >= teams.length){return 1;}
+    if (used[ind]){return prepareBattles(ind+1);}
+    used[ind] = 1;
+    for (let i=ind+1; i<teams.length; ++i){
+        if (!used[i] && !played[ind][i]){
+            used[i] = 1;
+            battlePrep.push({f:ind, s:i});
+            if (prepareBattles(ind+1)){return 1;}
+            battlePrep.pop();
+            used[i] = 0;
+        }
+    }
+    return 0;
+}
+
 function login(){
     socket.emit('login', getSigninData());
     return false;
@@ -56,7 +98,11 @@ function login(){
 socket.on('l', (success, isAdmin) => {
     judge = success;
     admin = isAdmin;
-    console.log(success);
     if (!success){alert("Wrong username or password");}
-    else{}
+    else{
+        if (admin && !isDayActive()){
+            loadNewDayBattles();
+        }
+        changeTab('b');
+    }
 });

@@ -23,7 +23,7 @@ class Judge{
                 this.salt = rows[0].salt;
                 this.saltedHash = Judge.calcSaltedHash(password, this.salt);
                 this.isAdmin = rows[0].is_admin;
-                callback(this.saltedHash == rows[0].passhash);
+                callback(this.saltedHash == rows[0].passhash, this);
             });
         }
     }
