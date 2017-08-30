@@ -114,6 +114,15 @@ socket.on('l', (success, isAdmin) => {
         changeTab('b');
     }
 });
+socket.on('b', (_battles, _indForBid) => {
+    battles = _battles;
+    indForBid = _indForBid;
+    sortBattles();
+    redoBattles();
+    if (admin && !isDayActive()){
+        loadNewDayBattles();
+    }
+});
 
 function submitBattles(){
     socket.emit('sb', activeBattles);

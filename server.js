@@ -99,6 +99,21 @@ function runServer(competition){
                 socket.emit('l', succ, (succ && currentJudge.isAdmin));
             });
         });
+        
+        socket.on('sb', (newBattles)=>{
+            let done = 0;
+            for (let battle of newBattles){
+                database.insertBattle(connection, battle, (id)=>{
+                    battle.id = id;
+                    indForBid[id] = battles.length;
+                    battles.push(battle);
+                    ++done;
+                    if (done == newBattles.length){
+                        socket.emit('b', battles, indForBid);
+                    }
+                });
+            }
+        });
     });
 
     http.listen(competition.port, () => {
@@ -118,6 +133,8 @@ updateChallenges = function (competition_id, battle_id, challenges, callback){
             players[indForPid[chal.player2]][getProblemType(competition_id, battle.day, chal.problem)] -= chal.points2;
         }
     }
+    teams[indForTid[battle.team1]].points -= pointsForResult(battle.points1, battle.points2);
+    teams[indForTid[battle.team2]].points -= pointsForResult(battle.points2, battle.points1);
     teams[indForTid[battle.team1]].point_difference -= battle.points1 - battle.points2;
     teams[indForTid[battle.team2]].point_difference -= battle.points2 - battle.points1;
     let points1 = 0;
@@ -134,6 +151,8 @@ updateChallenges = function (competition_id, battle_id, challenges, callback){
     battles[indForBid[battle_id]].points1 = points1;
     battles[indForBid[battle_id]].points2 = points2;
 
+    teams[indForTid[battle.team1]].points += pointsForResult(points1, points2);
+    teams[indForTid[battle.team2]].points += pointsForResult(points2, points1);
     teams[indForTid[battle.team1]].point_difference += points1 - points2;
     teams[indForTid[battle.team2]].point_difference += points2 - points1;
     
@@ -147,4 +166,9 @@ updateChallenges = function (competition_id, battle_id, challenges, callback){
         database.updatePlayer(connection, players[indForPid[pid]]);
     }
     if(callback) callback();
+}
+function pointsForResult(a, b){
+    if (a>b+3){return 2;}
+    if (a>=b-3){return 1;}
+    return 0;
 }

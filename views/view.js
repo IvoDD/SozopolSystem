@@ -45,6 +45,31 @@ function battleTR(battle){
     }
     return tr;
 }
+function challengeTR(challenge){
+    let tr = document.createElement('tr');
+    let td = [document.createElement('td'), document.createElement('td'), document.createElement('td'), document.createElement('td'), document.createElement('td')];
+    if (challenge){
+        td[0].appendChild(document.createTextNode(players[indForPid[challenge.player1]].name));
+        td[1].appendChild(document.createTextNode(challenge.points1));
+        td[2].appendChild(document.createTextNode(challenge.problem.num));
+        td[3].appendChild(document.createTextNode(challenge.points2));
+        td[4].appendChild(document.createTextNode(players[indForPid[challenge.player2]].name));
+    }else{
+        for (let i=0; i<td.length; ++i){
+            td[i].appendChild(document.createTextNode('-'));
+        }
+    }
+    td[0].style.textAlign = "left";
+    td[1].style.textAlign = "left";
+    td[2].style.textAlign = "center";
+    td[3].style.textAlign = "right";
+    td[4].style.textAlign = "right";
+    for (let i=0; i<td.length; ++i){
+        tr.appendChild(td[i]);
+        td[i].addEventListener('click', ()=>{});
+    }
+    return tr;
+}
 function createDayTable(day){
     let ret = {};
     let elem = document.createElement('h2');
@@ -153,4 +178,22 @@ function loadActiveBattles(){
     }
 }
 
-function showProtocol(id){}
+function showProtocol(id){
+    document.getElementById("protocol").style.display = "flex";
+    let tbody = document.getElementById("protocol_tbody");
+    while (tbody.firstChild){
+        tbody.removeChild(tbody.firstChild);
+    }
+    let cb = battles[indForBid[id]];
+    document.getElementById("team1").innerHTML = teams[indForTid[cb.team1]].name;
+    document.getElementById("team2").innerHTML = teams[indForTid[cb.team2]].name;
+    let challenges = cb.challenges;
+    for (let i=0; i<8; ++i){
+        tbody.appendChild(challengeTR(challenges[i]));
+    }
+}
+function hideProtocol(){
+    document.getElementById("protocol").style.display = "none";
+}
+document.getElementById("protocol").addEventListener('click', hideProtocol);
+document.getElementById("protocol_table").addEventListener('click', (evt)=>{evt.stopPropagation();});

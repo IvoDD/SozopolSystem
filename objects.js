@@ -64,7 +64,7 @@ class Challenge {
         this.player2 = player2;
         this.dir = dir;
         this.returned = returned;
-        this.points1 = points2;
+        this.points1 = points1;
         this.points2 = points2;
     }
 };
