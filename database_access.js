@@ -44,3 +44,18 @@ exports.loadBattles = function (connection, competition_id, battles, indForBid, 
         if (callback) callback();
     });
 }
+exports.updateBattle = function(connection, battle){
+    connection.query("UPDATE battles SET points1 = ?, points2 = ?, challenges = ? WHERE id = ?", [battle.points1, battle.points2, JSON.stringify(battle.challenges), battle.id], function(err){
+        if (err) console.error(err);
+    });
+}
+exports.updateTeam = function(connection, team){
+    connection.query("UPDATE teams SET points = ?, point_difference = ? WHERE id = ?", [team.points, team.point_difference, team.id], function(err){
+        if (err) console.error(err);
+    });
+}
+exports.updatePlayer = function(connection, player){
+    connection.query("UPDATE players SET comb = ?, geo = ?, numb = ?, alg = ? WHERE id = ?", [player.comb, player.geo, player.numb, player.alg, player.id], function(err){
+        if (err) console.error(err);        
+    });
+}
