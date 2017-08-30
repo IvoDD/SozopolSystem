@@ -39,7 +39,10 @@ function battleTR(battle){
         td[2].firstChild.nodeValue = "-";
     }
     td[3].appendChild(document.createTextNode(teams[indForTid[battle.team2]].name));
-    for (let i=0; i<td.length; ++i){tr.appendChild(td[i]);}
+    for (let i=0; i<td.length; ++i){
+        tr.appendChild(td[i]);
+        td[i].addEventListener('click', ()=>{showProtocol(battle.id);});
+    }
     return tr;
 }
 function createDayTable(day){
@@ -115,6 +118,7 @@ function loadNewDayBattles(){
     let battlesDom = document.getElementById("block_battles");
     let top = battlesDom.firstChild;
     let ret = createDayTable(day+1);
+    ret.table.style.maxWidth = "";
     let body = ret.body;
     body.id = "active_battles";
     let controlPanel = document.createElement('div');
@@ -124,6 +128,10 @@ function loadNewDayBattles(){
     let button = document.createElement("button");
     button.appendChild(document.createTextNode("Generate"));
     button.addEventListener("click", generateBattles);
+    controlPanel.appendChild(button);
+    button = document.createElement("button");
+    button.appendChild(document.createTextNode("Submit"));
+    button.addEventListener("click", submitBattles);
     controlPanel.appendChild(button);
 }
 
@@ -135,4 +143,14 @@ function loadActiveBattles(){
     for (let i=0; i<activeBattles.length; ++i){
         body.appendChild(battleTR(activeBattles[i]));
     }
+    for (let i=0; i<body.children.length; ++i){
+        let button = document.createElement('button');
+        button.appendChild(document.createTextNode("Mark as invalid"));
+        button.addEventListener('click', ()=>{markInvalid(i);generateBattles();});
+        let td = document.createElement('td');
+        td.appendChild(button);
+        body.children[i].appendChild(td);
+    }
 }
+
+function showProtocol(id){}

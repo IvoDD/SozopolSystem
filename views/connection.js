@@ -4,7 +4,7 @@ var teams, indForTid;
 var battles, indForBid;
 var judge = 0, admin = 0;
 var day = 0;
-var played = [], used = [], battlePrep = [];
+var played = [], used = [], battlePrep = [], invalid = [];
 var activeBattles = [];
 
 socket.on('init', (competitionName, _players, _indForPid, _teams, _indForTid, _battles, _indForBid)=>{
@@ -33,6 +33,7 @@ function sortTeams(){
     }
 }
 function sortBattles(){
+    invalid = [];
     for (let i=0; i<battles.length; ++i){
         for (let j=battles.length-1; j>i; --j){
             if (battles[j].day < battles[j-1].day){
@@ -51,6 +52,9 @@ function isDayActive(){
     }
 }
 
+function markInvalid(ind){
+    invalid.push({f: activeBattles[ind].team1, s: activeBattles[ind].team2});
+}
 function generateBattles(){
     battlePrep = [];
     played = [];
@@ -64,6 +68,10 @@ function generateBattles(){
     for (let i=0; i<battles.length; ++i){
         played[indForTid[battles[i].team1]][indForTid[battles[i].team2]] = 1;
         played[indForTid[battles[i].team2]][indForTid[battles[i].team1]] = 1;
+    }
+    for (let i=0; i<invalid.length; ++i){
+        played[indForTid[invalid[i].f]][indForTid[invalid[i].s]] = 1;
+        played[indForTid[invalid[i].s]][indForTid[invalid[i].f]] = 1;
     }
     if (prepareBattles(0)){
         activeBattles = [];
@@ -106,3 +114,7 @@ socket.on('l', (success, isAdmin) => {
         changeTab('b');
     }
 });
+
+function submitBattles(){
+    socket.emit('sb', activeBattles);
+}
