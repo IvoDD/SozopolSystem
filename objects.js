@@ -32,7 +32,7 @@ class Competition {
 };
 
 class Battle {
-    constructor(id, day, team1, team2, points1, points2, judges){
+    constructor(id, day, team1, team2, points1, points2, judges, challenges){
         this.id = id;
         this.day = day;
         this.team1 = team1;
@@ -40,9 +40,34 @@ class Battle {
         this.points1 = points1;
         this.points2 = points2;
         this.judges = judges;
+        this.challenges = challenges || [];
+    }
+    
+    addChallenge(problem, player1, player2, dir, returned, points1, points2){
+        this.challenges.push(new Challenge(problem, player1, player2, dir, returned, points1, points2));
     }
 };
-class Protocol {};
+
+class Problem {
+    constructor(competition_id, day, num, type){
+        this.competition_id = competition_id;
+        this.day = day;
+        this.num = num;
+        this.type = type;
+    }
+}
+
+class Challenge {
+    constructor(problem, player1, player2, dir, returned, points1, points2){
+        this.problem = problem;
+        this.player1 = player1;
+        this.player2 = player2;
+        this.dir = dir;
+        this.returned = returned;
+        this.points1 = points2;
+        this.points2 = points2;
+    }
+};
 
 if (typeof module !== 'undefined'){
     module.exports = {Player: Player, Team: Team, Competition: Competition, Battle: Battle};
