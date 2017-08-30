@@ -43,9 +43,9 @@ connection.query("SELECT * FROM competitions", [], function(err, rows, fields){
                 let curr = teams.Sheets[competitions[i].sheet];
                 if (curr != undefined){
                     for (let j=1; curr["A"+j] != undefined && curr["B"+j]!=undefined; ++j){                    
-                        connection.query("INSERT INTO teams (name, competition_id) VALUES (?, ?)", [curr['A'+j].v, curr['B'+j].v]);
+                        connection.query("INSERT INTO teams (name, school, competition_id) VALUES (?, ?, ?)", [curr['A'+j].v, curr['B'+j].v, curr['C'+j].v]);
                         ++team_id;
-                        for (let k = 67; curr[String.fromCharCode(k) + j] != undefined; ++k){
+                        for (let k = 68; curr[String.fromCharCode(k) + j] != undefined; ++k){
                             connection.query("INSERT INTO players (name, team_id) VALUES (?, ?)", [curr[String.fromCharCode(k) + j].v, team_id]);
                         }
                     }
