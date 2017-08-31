@@ -11,9 +11,10 @@ class Player{
 };
 
 class Team {
-    constructor(id, name, player_ids, points, point_difference){
+    constructor(id, name, school, player_ids, points, point_difference){
         this.id = id;
         this.name = name;
+        this.school = school;
         this.player_ids = player_ids;
         this.points = points;
         this.point_difference = point_difference;

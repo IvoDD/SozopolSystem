@@ -211,7 +211,7 @@ function loadNewDayBattles(){
     battlesDom.insertBefore(controlPanel, top);
     let button = document.createElement("button");
     button.appendChild(document.createTextNode("Generate"));
-    button.addEventListener("click", generateBattles);
+    button.addEventListener("click", () => {invalid = []; generateBattles();});
     controlPanel.appendChild(button);
     button = document.createElement("button");
     button.appendChild(document.createTextNode("Submit"));
@@ -250,6 +250,9 @@ function showProtocol(id){
 }
 function hideProtocol(){
     document.getElementById("protocol").style.display = "none";
+    if (isFormOpen){
+        closeCurrentForm();
+    }
 }
 function openCurrentForm(place, input){
     lastText = place.innerHTML;
