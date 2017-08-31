@@ -97,6 +97,7 @@ function prepareBattles(ind){
             used[i] = 0;
         }
     }
+    used[ind] = 0;
     return 0;
 }
 
