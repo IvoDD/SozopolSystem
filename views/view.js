@@ -300,7 +300,12 @@ function requestChallenges(){
     var body = document.getElementById("protocol_tbody");
     let b = battles[indForBid[protocolId]];
     for (let row of body.children){
-        if (row.children[2].innerHTML == '-'){break;}
+        let unfilled = 0;
+        for (let c of row.children){
+            if (c.innerHTML == '-'){++unfilled;}
+        }
+        if (unfilled == 5){break;}
+        if (unfilled > 0){return undefined;}
         let problem = Number(row.children[2].innerHTML);
         let player1, player2;
         for (let id of teams[indForTid[b.team1]].player_ids){

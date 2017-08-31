@@ -142,6 +142,10 @@ function submitBattles(){
 }
 function submitProtocol(){
     var challenges = requestChallenges();
-    hideProtocol();
-    socket.emit('c', protocolId, challenges);
+    if (challenges){
+        hideProtocol();
+        socket.emit('c', protocolId, challenges);
+    }else{
+        alert("Invalid protocol");
+    }
 }

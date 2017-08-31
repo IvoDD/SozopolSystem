@@ -110,7 +110,7 @@ function runServer(competition){
                     battles.push(battle);
                     ++done;
                     if (done == newBattles.length){
-                        socket.emit('b', battles, indForBid);
+                        io.emit('b', battles, indForBid);
                     }
                 });
             }
@@ -119,7 +119,7 @@ function runServer(competition){
         socket.on('c', (battleId, challenges) => {
             if (!success || !currentJudge.isAdmin){console.log("unauthorized access try"); return;}
             updateChallenges(competition.id, battleId, challenges, players, indForPid, teams, indForTid, battles, indForBid, () => {
-                socket.emit('r', players, indForPid, teams, indForTid, battles, indForBid);
+                io.emit('r', players, indForPid, teams, indForTid, battles, indForBid);
             });
         });
     });
