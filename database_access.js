@@ -66,7 +66,7 @@ function insertable(battle){
     ans.team1 = battle.team1;
     ans.team2 = battle.team2;
     ans.points1 = battle.points1;
-    ans.points1 = battle.points2;
+    ans.points2 = battle.points2;
     ans.judges = JSON.stringify(battle.judges);
     ans.challenges = JSON.stringify(battle.challenges);
     return ans;

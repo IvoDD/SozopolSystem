@@ -1,3 +1,5 @@
+var isFormOpen = 0;
+
 function setUp(competitionName){
     document.getElementById("competition_name").innerHTML = competitionName;
 }
@@ -45,7 +47,7 @@ function battleTR(battle){
     }
     return tr;
 }
-function challengeTR(challenge){
+function challengeTR(battle, challenge){
     let tr = document.createElement('tr');
     let td = [document.createElement('td'), document.createElement('td'), document.createElement('td'), document.createElement('td'), document.createElement('td')];
     if (challenge){
@@ -66,8 +68,26 @@ function challengeTR(challenge){
     td[4].style.textAlign = "right";
     for (let i=0; i<td.length; ++i){
         tr.appendChild(td[i]);
-        td[i].addEventListener('click', ()=>{});
     }
+    td[0].addEventListener('click', (evt)=>{
+        if (isFormOpen){return;}
+        isFormOpen = 1;
+        let curr = evt.target;
+        while(curr.firstChild){curr.removeChild(curr.firstChild);}
+        let form = document.createElement('form');
+        form.onsubmit = () => {return closeCurrentForm();};
+        let select = document.createElement('select');
+        select.id = "data";
+        let ct = teams[indForTid[battle.team1]];
+        for (let id of ct.player_ids){
+            let option = document.createElement('option');
+            option.value = players[indForPid[id]].name;
+            option.appendChild(document.createTextNode(option.value));
+            select.appendChild(option);
+        }
+        form.appendChild(select);
+        curr.appendChild(form);
+    });
     return tr;
 }
 function createDayTable(day){
@@ -189,11 +209,15 @@ function showProtocol(id){
     document.getElementById("team2").innerHTML = teams[indForTid[cb.team2]].name;
     let challenges = cb.challenges;
     for (let i=0; i<8; ++i){
-        tbody.appendChild(challengeTR(challenges[i]));
+        tbody.appendChild(challengeTR(cb, challenges[i]));
     }
 }
 function hideProtocol(){
     document.getElementById("protocol").style.display = "none";
+}
+function closeCurrentForm(){
+    isFormOpen = 0;
+    return false;
 }
 document.getElementById("protocol").addEventListener('click', hideProtocol);
 document.getElementById("protocol_table").addEventListener('click', (evt)=>{evt.stopPropagation();});
