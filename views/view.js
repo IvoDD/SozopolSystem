@@ -296,6 +296,7 @@ function closeCurrentForm(){
 }
 
 function requestChallenges(){
+    if (isFormOpen){return undefined;}
     var ans = [];
     var body = document.getElementById("protocol_tbody");
     let b = battles[indForBid[protocolId]];
