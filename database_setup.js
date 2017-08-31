@@ -24,9 +24,9 @@ class Competiton{
     }
 };
 
-var competitions = [new Competiton('5-6 клас', 3005, 'grade56'),
-                   new Competiton('7-8 клас', 3006, 'grade78'),
-                   new Competiton('9-12 клас', 3007, 'grade912')];
+var competitions = [new Competiton('6-7 клас', 3005, 'grade67'),
+                   new Competiton('8-9 клас', 3006, 'grade89'),
+                   new Competiton('10-12 клас', 3007, 'grade1012')];
 
 var teams = xlsx.readFile('teams.xlsx');
 
