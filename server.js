@@ -101,6 +101,7 @@ function runServer(competition){
         });
         
         socket.on('sb', (newBattles)=>{
+            if (!success || !currentJudge.isAdmin){console.log("unauthorized access try"); return;}
             let done = 0;
             for (let battle of newBattles){
                 database.insertBattle(connection, battle, (id)=>{
@@ -114,6 +115,13 @@ function runServer(competition){
                 });
             }
         });
+        
+        socket.on('c', (battleId, challenges) => {
+            if (!success || !currentJudge.isAdmin){console.log("unauthorized access try"); return;}
+            updateChallenges(competition.id, battleId, challenges, players, indForPid, teams, indForTid, battles, indForBid, () => {
+                socket.emit('r', players, indForPid, teams, indForTid, battles, indForBid);
+            });
+        });
     });
 
     http.listen(competition.port, () => {
@@ -125,7 +133,7 @@ getProblemType = function(competition, day, problem){
     return problems[competition - 1][day - 1][problem - 1];
 }
 
-updateChallenges = function (competition_id, battle_id, challenges, callback){
+updateChallenges = function (competition_id, battle_id, challenges, players, indForPid, teams, indForTid, battles, indForBid, callback){
     let battle = battles[indForBid[battle_id]];
     if (battle.challenges){
         for (let chal of battle.challenges){
@@ -168,6 +176,7 @@ updateChallenges = function (competition_id, battle_id, challenges, callback){
     if(callback) callback();
 }
 function pointsForResult(a, b){
+    if (a==0 && b==0){return 0;}
     if (a>b+3){return 2;}
     if (a>=b-3){return 1;}
     return 0;

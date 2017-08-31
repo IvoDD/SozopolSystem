@@ -50,6 +50,7 @@ function isDayActive(){
         if (battles[i].day != day){return 0;}
         if (battles[i].points1 == 0 && battles[i].points2 == 0){return 1;}
     }
+    return 0;
 }
 
 function markInvalid(ind){
@@ -123,7 +124,24 @@ socket.on('b', (_battles, _indForBid) => {
         loadNewDayBattles();
     }
 });
+socket.on('r', (_players, _indForPid, _teams, _indForTid, _battles, _indForBid) => {
+    players = _players;
+    indForPid = _indForPid;
+    teams = _teams;
+    indForTid = _indForTid;
+    battles = _battles;
+    indForBid = _indForBid;
+    sortTeams();
+    redoResults();
+    sortBattles();
+    redoBattles();
+});
 
 function submitBattles(){
     socket.emit('sb', activeBattles);
+}
+function submitProtocol(){
+    var challenges = requestChallenges();
+    hideProtocol();
+    socket.emit('c', protocolId, challenges);
 }

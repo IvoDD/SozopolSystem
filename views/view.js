@@ -1,4 +1,4 @@
-var isFormOpen = 0, lastText = "-";
+var isFormOpen = 0, lastText = "-", protocolId;
 
 function setUp(competitionName){
     document.getElementById("competition_name").innerHTML = competitionName;
@@ -59,7 +59,7 @@ function challengeTR(battle, challenge){
     if (challenge){
         td[0].appendChild(document.createTextNode(players[indForPid[challenge.player1]].name));
         td[1].appendChild(document.createTextNode(challenge.points1));
-        td[2].appendChild(document.createTextNode(challenge.problem.num));
+        td[2].appendChild(document.createTextNode(challenge.problem));
         td[3].appendChild(document.createTextNode(challenge.points2));
         td[4].appendChild(document.createTextNode(players[indForPid[challenge.player2]].name));
     }else{
@@ -76,7 +76,7 @@ function challengeTR(battle, challenge){
         tr.appendChild(td[i]);
     }
     td[0].addEventListener('click', (evt) => {
-        //security-check to do
+        if (!judge || !admin){return;}
         if (isFormOpen){return;}
         let select = document.createElement('select');
         let ct = teams[indForTid[battle.team1]];
@@ -89,6 +89,7 @@ function challengeTR(battle, challenge){
         openCurrentForm(evt.target, select);
     });
     td[1].addEventListener('click', (evt) => {
+        if (!judge || !admin){return;}
         if (isFormOpen){return;}
         let input = document.createElement('input');
         input.type = "number";
@@ -97,6 +98,7 @@ function challengeTR(battle, challenge){
         openCurrentForm(evt.target, input);
     });
     td[2].addEventListener('click', (evt) => {
+        if (!judge || !admin){return;}
         if (isFormOpen){return;}
         let input = document.createElement('input');
         input.type = "number";
@@ -105,6 +107,7 @@ function challengeTR(battle, challenge){
         openCurrentForm(evt.target, input);
     });
     td[3].addEventListener('click', (evt) => {
+        if (!judge || !admin){return;}
         if (isFormOpen){return;}
         let input = document.createElement('input');
         input.type = "number";
@@ -113,6 +116,7 @@ function challengeTR(battle, challenge){
         openCurrentForm(evt.target, input);
     });
     td[4].addEventListener('click', (evt) => {
+        if (!judge || !admin){return;}
         if (isFormOpen){return;}
         let select = document.createElement('select');
         let ct = teams[indForTid[battle.team2]];
@@ -180,6 +184,9 @@ function redoBattles(){
             body.appendChild(battleTR(battles[k]));
         }
     }
+    if (admin && !isDayActive()){
+        loadNewDayBattles();
+    }
 }
 
 function getSigninData(){
@@ -229,6 +236,7 @@ function loadActiveBattles(){
 }
 
 function showProtocol(id){
+    protocolId = id;
     document.getElementById("protocol").style.display = "flex";
     let tbody = document.getElementById("protocol_tbody");
     removeChildren(tbody);
@@ -286,6 +294,32 @@ function closeCurrentForm(){
     delete form;
     return;
 }
+
+function requestChallenges(){
+    var ans = [];
+    var body = document.getElementById("protocol_tbody");
+    let b = battles[indForBid[protocolId]];
+    for (let row of body.children){
+        if (row.children[2].innerHTML == '-'){break;}
+        let problem = Number(row.children[2].innerHTML);
+        let player1, player2;
+        for (let id of teams[indForTid[b.team1]].player_ids){
+            if (players[indForPid[id]].name == row.children[0].innerHTML){
+                player1 = id; break;
+            }
+        }
+        for (let id of teams[indForTid[b.team2]].player_ids){
+            if (players[indForPid[id]].name == row.children[4].innerHTML){
+                player2 = id; break;
+            }
+        }
+        let points1 = Number(row.children[1].innerHTML);
+        let points2 = Number(row.children[3].innerHTML);
+        ans.push(new Challenge(problem, player1, player2, 0, 0, points1, points2));
+    }
+    return ans;
+}
+
 window.addEventListener('keydown', (evt) => {
     if (evt.keyCode == 27){
         if (isFormOpen){closeCurrentForm();}
