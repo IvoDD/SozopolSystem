@@ -1,4 +1,4 @@
-var isFormOpen = 0;
+var isFormOpen = 0, lastText = "-";
 
 function setUp(competitionName){
     document.getElementById("competition_name").innerHTML = competitionName;
@@ -20,6 +20,12 @@ function changeTab(tabName){
     document.getElementById(tabData[tabName]).style.display="block";
 }
 
+
+function removeChildren(element){
+    while (element.firstChild){
+        element.removeChild(element.firstChild);
+    }
+}
 
 function teamTR(ind){
     let tr = document.createElement("tr");
@@ -69,15 +75,10 @@ function challengeTR(battle, challenge){
     for (let i=0; i<td.length; ++i){
         tr.appendChild(td[i]);
     }
-    td[0].addEventListener('click', (evt)=>{
+    td[0].addEventListener('click', (evt) => {
+        //security-check to do
         if (isFormOpen){return;}
-        isFormOpen = 1;
-        let curr = evt.target;
-        while(curr.firstChild){curr.removeChild(curr.firstChild);}
-        let form = document.createElement('form');
-        form.onsubmit = () => {return closeCurrentForm();};
         let select = document.createElement('select');
-        select.id = "data";
         let ct = teams[indForTid[battle.team1]];
         for (let id of ct.player_ids){
             let option = document.createElement('option');
@@ -85,8 +86,43 @@ function challengeTR(battle, challenge){
             option.appendChild(document.createTextNode(option.value));
             select.appendChild(option);
         }
-        form.appendChild(select);
-        curr.appendChild(form);
+        openCurrentForm(evt.target, select);
+    });
+    td[1].addEventListener('click', (evt) => {
+        if (isFormOpen){return;}
+        let input = document.createElement('input');
+        input.type = "number";
+        input.min = 0; input.max = 12;
+        input.value = evt.target.innerHTML;
+        openCurrentForm(evt.target, input);
+    });
+    td[2].addEventListener('click', (evt) => {
+        if (isFormOpen){return;}
+        let input = document.createElement('input');
+        input.type = "number";
+        input.min = 1; input.max = 8;
+        input.value = evt.target.innerHTML;
+        openCurrentForm(evt.target, input);
+    });
+    td[3].addEventListener('click', (evt) => {
+        if (isFormOpen){return;}
+        let input = document.createElement('input');
+        input.type = "number";
+        input.min = 0; input.max = 12;
+        input.value = evt.target.innerHTML;
+        openCurrentForm(evt.target, input);
+    });
+    td[4].addEventListener('click', (evt) => {
+        if (isFormOpen){return;}
+        let select = document.createElement('select');
+        let ct = teams[indForTid[battle.team2]];
+        for (let id of ct.player_ids){
+            let option = document.createElement('option');
+            option.value = players[indForPid[id]].name;
+            option.appendChild(document.createTextNode(option.value));
+            select.appendChild(option);
+        }
+        openCurrentForm(evt.target, select);
     });
     return tr;
 }
@@ -123,9 +159,7 @@ function createDayTable(day){
 
 function redoResults(){
     let results = document.getElementById("results");
-    while (results.firstChild){
-        results.removeChild(results.firstChild);
-    }
+    removeChildren(results);
     for (let i=0; i<teams.length; ++i){
         results.appendChild(teamTR(i));
     }
@@ -133,9 +167,7 @@ function redoResults(){
 
 function redoBattles(){
     let battlesDom = document.getElementById("block_battles");
-    while(battlesDom.firstChild){
-        battlesDom.removeChild(battlesDom.firstChild);
-    }
+    removeChildren(battlesDom);
     let j = battles.length-1;
     for (let i = day; i>0; --i){
         let ret = createDayTable(i);
@@ -182,9 +214,7 @@ function loadNewDayBattles(){
 
 function loadActiveBattles(){
     let body = document.getElementById("active_battles");
-    while (body.firstChild){
-        body.removeChild(body.firstChild);
-    }
+    removeChildren(body);
     for (let i=0; i<activeBattles.length; ++i){
         body.appendChild(battleTR(activeBattles[i]));
     }
@@ -201,9 +231,7 @@ function loadActiveBattles(){
 function showProtocol(id){
     document.getElementById("protocol").style.display = "flex";
     let tbody = document.getElementById("protocol_tbody");
-    while (tbody.firstChild){
-        tbody.removeChild(tbody.firstChild);
-    }
+    removeChildren(tbody);
     let cb = battles[indForBid[id]];
     document.getElementById("team1").innerHTML = teams[indForTid[cb.team1]].name;
     document.getElementById("team2").innerHTML = teams[indForTid[cb.team2]].name;
@@ -215,9 +243,54 @@ function showProtocol(id){
 function hideProtocol(){
     document.getElementById("protocol").style.display = "none";
 }
-function closeCurrentForm(){
+function openCurrentForm(place, input){
+    lastText = place.innerHTML;
+    isFormOpen = 1;
+    input.id = 'data';
+    let curr = place;
+    removeChildren(curr);
+    let form = document.createElement('form');
+    form.style.display = "inline-block";
+    form.onsubmit = () => {return submitCurrentForm();};
+    form.id = "current_form";
+    form.appendChild(input);
+    let submit1 = document.createElement('input');
+    submit1.type = "submit";
+    submit1.value = "V";
+    let button = document.createElement('button');
+    button.appendChild(document.createTextNode("X"));
+    button.addEventListener('click', (evt) => {closeCurrentForm(); evt.stopPropagation(); return;});
+    button.style.display = "inline-block";
+    form.appendChild(submit1);
+    curr.appendChild(form);
+    curr.appendChild(button);
+    input.focus();
+}
+function submitCurrentForm(){
     isFormOpen = 0;
+    let form = document.getElementById("current_form");
+    let text = document.getElementById("data").value;
+    let parrent = form.parentElement;
+    removeChildren(parrent);
+    if (text == ""){text = "-";}
+    parrent.appendChild(document.createTextNode(text));
+    delete form;
     return false;
 }
+function closeCurrentForm(){
+    isFormOpen = 0;
+    let form = document.getElementById("current_form");
+    let parrent = form.parentElement;
+    removeChildren(parrent);
+    parrent.appendChild(document.createTextNode(lastText));
+    delete form;
+    return;
+}
+window.addEventListener('keydown', (evt) => {
+    if (evt.keyCode == 27){
+        if (isFormOpen){closeCurrentForm();}
+        else{hideProtocol();}
+    }
+});
 document.getElementById("protocol").addEventListener('click', hideProtocol);
 document.getElementById("protocol_table").addEventListener('click', (evt)=>{evt.stopPropagation();});
