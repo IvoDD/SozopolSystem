@@ -16,7 +16,7 @@ exports.loadPlayers = function (connection, competition_id, players, indForPid, 
         if (err){console.error(err);}
         for (let i=0; i<rows.length; ++i){
             indForPid[rows[i].id] = players.length;
-            players.push(new objects.Player(rows[i].id, rows[i].name, rows[i].team_id, rows[i].comb, rows[i].geom, rows[i].numb, rows[i].alg));
+            players.push(new objects.Player(rows[i].id, rows[i].name, rows[i].team_id, rows[i].comb, rows[i].geo, rows[i].numb, rows[i].alg));
         }
         if (callback) callback();
     });
