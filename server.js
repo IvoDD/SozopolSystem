@@ -17,8 +17,8 @@ for (let i = 0; i < max_competitions; ++i){
         }
     }
 }
-for (let i = 0; probs["A" + i] != undefined; ++i){
-    problems[probs["A" + i] - 1][probs["B" + i] - 1][probs["C" + i] - 1] = probs["D" + i];
+for (let i = 1; probs["A" + i] != undefined; ++i){
+    problems[probs["A" + i].v - 1][probs["B" + i].v - 1][probs["C" + i].v - 1] = probs["D" + i].v;
 }
 
 const db_config = {
