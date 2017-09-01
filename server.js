@@ -129,7 +129,7 @@ function runServer(competition){
             if (!success || !currentJudge.isAdmin){console.log("unauthorized access try"); return;}
             if (!checkAdmin(battles[indForBid[battleId]], judgeId)){
                 battles[indForBid[battleId]].judges.push(judgeId);
-                database.updateBattle(battles[indForBid[battleId]]);
+                database.updateBattle(connection, battles[indForBid[battleId]]);
                 io.emit('b', battles, indForBid);
             }
         });
@@ -142,7 +142,7 @@ function runServer(competition){
 
 function checkAdmin(battle, judgeId){
     for (let j of battle.judges){
-        if (j.id == judgeId){return 1;}
+        if (j == judgeId){return 1;}
     }
     return 0;
 }
