@@ -98,7 +98,7 @@ function challengeTR(battle, challenge){
         tr.appendChild(td[i]);
     }
     td[0].addEventListener('click', (evt) => {
-        if (judge && (admin || checkAdmin(battle.id, currJudgeId))){return;}
+        if (!(judge && (admin || checkAdmin(battle.id, currJudgeId)))){return;}
         if (isFormOpen){return;}
         let select = document.createElement('select');
         let ct = teams[indForTid[battle.team1]];
@@ -111,7 +111,7 @@ function challengeTR(battle, challenge){
         openCurrentForm(evt.target, select);
     });
     td[1].addEventListener('click', (evt) => {
-        if (judge && (admin || checkAdmin(battle.id, currJudgeId))){return;}
+        if (!(judge && (admin || checkAdmin(battle.id, currJudgeId)))){return;}
         if (isFormOpen){return;}
         let input = document.createElement('input');
         input.type = "number";
@@ -120,7 +120,7 @@ function challengeTR(battle, challenge){
         openCurrentForm(evt.target, input);
     });
     td[2].addEventListener('click', (evt) => {
-        if (judge && (admin || checkAdmin(battle.id, currJudgeId))){return;}
+        if (!(judge && (admin || checkAdmin(battle.id, currJudgeId)))){return;}
         if (isFormOpen){return;}
         let input = document.createElement('input');
         input.type = "number";
@@ -129,7 +129,7 @@ function challengeTR(battle, challenge){
         openCurrentForm(evt.target, input);
     });
     td[3].addEventListener('click', (evt) => {
-        if (judge && (admin || checkAdmin(battle.id, currJudgeId))){return;}
+        if (!(judge && (admin || checkAdmin(battle.id, currJudgeId)))){return;}
         if (isFormOpen){return;}
         let input = document.createElement('input');
         input.type = "number";
@@ -138,7 +138,7 @@ function challengeTR(battle, challenge){
         openCurrentForm(evt.target, input);
     });
     td[4].addEventListener('click', (evt) => {
-        if (judge && (admin || checkAdmin(battle.id, currJudgeId))){return;}
+        if (!(judge && (admin || checkAdmin(battle.id, currJudgeId)))){return;}
         if (isFormOpen){return;}
         let select = document.createElement('select');
         let ct = teams[indForTid[battle.team2]];

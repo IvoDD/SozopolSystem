@@ -143,7 +143,7 @@ socket.on('r', (_players, _indForPid, _teams, _indForTid, _battles, _indForBid) 
 
 function checkAdmin(battleId, judgeId){
     for (let j of battles[indForBid[battleId]].judges){
-        if (j.id == judgeId){return 1;}
+        if (j == judgeId){return 1;}
     }
     return 0;
 }
