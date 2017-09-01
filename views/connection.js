@@ -113,9 +113,7 @@ socket.on('l', (success, isAdmin, _currJudgeId) => {
     currJudgeId = _currJudgeId;
     if (!success){alert("Wrong username or password");}
     else{
-        if (admin){
-            redoBattles();
-        }
+        redoBattles();
         changeTab('b');
     }
 });

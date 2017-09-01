@@ -258,6 +258,7 @@ function loadActiveBattles(){
 }
 
 function showProtocol(id){
+    if (!judge) return;
     protocolId = id;
     document.getElementById("protocol").style.display = "flex";
     let tbody = document.getElementById("protocol_tbody");
