@@ -2,12 +2,13 @@ var socket = io();
 var players, indForPid;
 var teams, indForTid;
 var battles, indForBid;
-var judge = 0, admin = 0;
+var judges = [];
+var judge = 0, admin = 0, currJudgeId = 0;
 var day = 0;
 var played = [], used = [], battlePrep = [], invalid = [];
 var activeBattles = [];
 
-socket.on('init', (competitionName, _players, _indForPid, _teams, _indForTid, _battles, _indForBid)=>{
+socket.on('init', (competitionName, _players, _indForPid, _teams, _indForTid, _battles, _indForBid, _judges)=>{
     setUp(competitionName);
     players = _players;
     indForPid = _indForPid;
@@ -15,6 +16,7 @@ socket.on('init', (competitionName, _players, _indForPid, _teams, _indForTid, _b
     indForTid = _indForTid;
     battles = _battles;
     indForBid = _indForBid;
+    judges = _judges;
     sortTeams();
     redoResults();
     sortBattles();
@@ -105,13 +107,14 @@ function login(){
     socket.emit('login', getSigninData());
     return false;
 }
-socket.on('l', (success, isAdmin) => {
+socket.on('l', (success, isAdmin, _currJudgeId) => {
     judge = success;
     admin = isAdmin;
+    currJudgeId = _currJudgeId;
     if (!success){alert("Wrong username or password");}
     else{
-        if (admin && !isDayActive()){
-            loadNewDayBattles();
+        if (admin){
+            redoBattles();
         }
         changeTab('b');
     }
@@ -138,6 +141,21 @@ socket.on('r', (_players, _indForPid, _teams, _indForTid, _battles, _indForBid) 
     redoBattles();
 });
 
+function checkAdmin(battleId, judgeId){
+    for (let j of battles[indForBid[battleId]].judges){
+        if (j.id == judgeId){return 1;}
+    }
+    return 0;
+}
+function addJudge(battleId, form){
+    let id = form.firstChild.value;
+    if (checkAdmin(battleId, id)){
+        alert("already judge");
+    }
+    else{
+        socket.emit('ij', battleId, id);
+    }
+}
 function submitBattles(){
     socket.emit('sb', activeBattles);
 }

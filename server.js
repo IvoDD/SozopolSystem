@@ -82,21 +82,23 @@ function runServer(competition){
     let players = [], indForPid = [];
     let teams = [], indForTid = [];
     let battles = [], indForBid = [];
+    let judges = [];
     database.loadPlayers(connection, competition.id, players, indForPid, () => {
         database.loadTeams(connection, competition.id, players, teams, indForTid);
     });
     database.loadBattles(connection, competition.id, battles, indForBid);
+    database.loadJudges(connection, judges);
     
     io.on('connection', (socket) => {
         let currentJudge;
         let success = 0;
-        socket.emit('init', competition.name, players, indForPid, teams, indForTid, battles, indForBid);
+        socket.emit('init', competition.name, players, indForPid, teams, indForTid, battles, indForBid, judges);
         
         socket.on('login', (loginData) => {
             currentJudge = new Judge(connection, "", loginData.username, loginData.password, 0, (succ, curr) => {
                 success = succ;
                 currentJudge = curr;
-                socket.emit('l', succ, (succ && currentJudge.isAdmin));
+                socket.emit('l', succ, (succ && currentJudge.isAdmin), currentJudge.id);
             });
         });
         
@@ -117,16 +119,32 @@ function runServer(competition){
         });
         
         socket.on('c', (battleId, challenges) => {
-            if (!success || !currentJudge.isAdmin){console.log("unauthorized access try"); return;}
+            if (!(success && (currentJudge.isAdmin || checkAdmin(battles[indForBid[battleId]], currentJudge.id)))){console.log("unauthorized access try"); return;}
             updateChallenges(competition.id, battleId, challenges, players, indForPid, teams, indForTid, battles, indForBid, () => {
                 io.emit('r', players, indForPid, teams, indForTid, battles, indForBid);
             });
+        });
+        
+        socket.on('ij', (battleId, judgeId) => {
+            if (!success || !currentJudge.isAdmin){console.log("unauthorized access try"); return;}
+            if (!checkAdmin(battles[indForBid[battleId]], judgeId)){
+                battles[indForBid[battleId]].judges.push(judgeId);
+                database.updateBattle(battles[indForBid[battleId]]);
+                io.emit('b', battles, indForBid);
+            }
         });
     });
 
     http.listen(competition.port, () => {
         console.log(competition.name + " on port " + competition.port);
     });
+}
+
+function checkAdmin(battle, judgeId){
+    for (let j of battle.judges){
+        if (j.id == judgeId){return 1;}
+    }
+    return 0;
 }
 
 getProblemType = function(competition, day, problem){

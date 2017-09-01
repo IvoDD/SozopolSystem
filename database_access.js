@@ -44,8 +44,16 @@ exports.loadBattles = function (connection, competition_id, battles, indForBid, 
         if (callback) callback();
     });
 }
+exports.loadJudges = function (connection, judges){
+    connection.query("SELECT id, name FROM judges", (err, rows, fields) => {
+        if (err){console.error(err);}
+        for (let j of rows){
+            judges.push(j);
+        }
+    });
+}
 exports.updateBattle = function(connection, battle){
-    connection.query("UPDATE battles SET points1 = ?, points2 = ?, challenges = ? WHERE id = ?", [battle.points1, battle.points2, JSON.stringify(battle.challenges), battle.id], function(err){
+    connection.query("UPDATE battles SET points1 = ?, points2 = ?, judges = ?, challenges = ? WHERE id = ?", [battle.points1, battle.points2, JSON.stringify(battle.judges), JSON.stringify(battle.challenges), battle.id], function(err){
         if (err) console.error(err);
     });
 }

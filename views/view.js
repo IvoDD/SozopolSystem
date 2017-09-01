@@ -27,6 +27,24 @@ function removeChildren(element){
     }
 }
 
+function addJudgeForm(battleId){
+    let form = document.createElement('form');
+    let select = document.createElement('select');
+    for (let j of judges){
+        let option = document.createElement('option');
+        option.value = j.id;
+        option.appendChild(document.createTextNode(j.name));
+        select.appendChild(option);
+    }
+    form.appendChild(select);
+    let submit = document.createElement('input');
+    submit.type = 'submit';
+    submit.value = "Add judge";
+    form.appendChild(submit);
+    form.onsubmit = () => {addJudge(battleId, form)};
+    return form;
+}
+
 function teamTR(ind){
     let tr = document.createElement("tr");
     let td = [document.createElement("td"), document.createElement("td"), document.createElement("td")];
@@ -36,20 +54,24 @@ function teamTR(ind){
     for (let i=0; i<td.length; ++i){tr.appendChild(td[i]);}
     return tr;
 }
-function battleTR(battle){
+function battleTR(battle, bonus = 0){
     let tr = document.createElement('tr');
     let td = [document.createElement('td'), document.createElement('td'), document.createElement('td'), document.createElement('td')];
     td[0].appendChild(document.createTextNode(teams[indForTid[battle.team1]].name));
     td[1].appendChild(document.createTextNode(battle.points1));
     td[2].appendChild(document.createTextNode(battle.points2));
+    td[3].appendChild(document.createTextNode(teams[indForTid[battle.team2]].name));
     if (battle.points1==0 && battle.points2==0){
         td[1].firstChild.nodeValue = "-";
         td[2].firstChild.nodeValue = "-";
+        if (bonus){
+            td.push(document.createElement('td'));
+            td[4].appendChild(addJudgeForm(battle.id));
+        }
     }
-    td[3].appendChild(document.createTextNode(teams[indForTid[battle.team2]].name));
     for (let i=0; i<td.length; ++i){
         tr.appendChild(td[i]);
-        td[i].addEventListener('click', ()=>{showProtocol(battle.id);});
+        if (i<4) td[i].addEventListener('click', ()=>{showProtocol(battle.id);});
     }
     return tr;
 }
@@ -76,7 +98,7 @@ function challengeTR(battle, challenge){
         tr.appendChild(td[i]);
     }
     td[0].addEventListener('click', (evt) => {
-        if (!judge || !admin){return;}
+        if (judge && (admin || checkAdmin(battle.id, currJudgeId))){return;}
         if (isFormOpen){return;}
         let select = document.createElement('select');
         let ct = teams[indForTid[battle.team1]];
@@ -89,7 +111,7 @@ function challengeTR(battle, challenge){
         openCurrentForm(evt.target, select);
     });
     td[1].addEventListener('click', (evt) => {
-        if (!judge || !admin){return;}
+        if (judge && (admin || checkAdmin(battle.id, currJudgeId))){return;}
         if (isFormOpen){return;}
         let input = document.createElement('input');
         input.type = "number";
@@ -98,7 +120,7 @@ function challengeTR(battle, challenge){
         openCurrentForm(evt.target, input);
     });
     td[2].addEventListener('click', (evt) => {
-        if (!judge || !admin){return;}
+        if (judge && (admin || checkAdmin(battle.id, currJudgeId))){return;}
         if (isFormOpen){return;}
         let input = document.createElement('input');
         input.type = "number";
@@ -107,7 +129,7 @@ function challengeTR(battle, challenge){
         openCurrentForm(evt.target, input);
     });
     td[3].addEventListener('click', (evt) => {
-        if (!judge || !admin){return;}
+        if (judge && (admin || checkAdmin(battle.id, currJudgeId))){return;}
         if (isFormOpen){return;}
         let input = document.createElement('input');
         input.type = "number";
@@ -116,7 +138,7 @@ function challengeTR(battle, challenge){
         openCurrentForm(evt.target, input);
     });
     td[4].addEventListener('click', (evt) => {
-        if (!judge || !admin){return;}
+        if (judge && (admin || checkAdmin(battle.id, currJudgeId))){return;}
         if (isFormOpen){return;}
         let select = document.createElement('select');
         let ct = teams[indForTid[battle.team2]];
@@ -181,7 +203,7 @@ function redoBattles(){
         
         while(j>=0 && battles[j].day == i){--j;}
         for (let k=j+1; k<battles.length && battles[k].day == i; ++k){
-            body.appendChild(battleTR(battles[k]));
+            body.appendChild(battleTR(battles[k], admin));
         }
     }
     if (admin && !isDayActive()){
