@@ -221,6 +221,7 @@ function getSigninData(){
 }
 
 function loadNewDayBattles(){
+    if (day>=5){return;}
     let battlesDom = document.getElementById("block_battles");
     let top = battlesDom.firstChild;
     let ret = createDayTable(day+1);

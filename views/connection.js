@@ -59,6 +59,14 @@ function markInvalid(ind){
     invalid.push({f: activeBattles[ind].team1, s: activeBattles[ind].team2});
 }
 function generateBattles(){
+    if (day > 4){return;}
+    activeBattles = [];
+    if (day == 4){
+        activeBattles.push(new Battle(-1, day+1, teams[0].id, teams[1].id, 0, 0, []));
+        activeBattles.push(new Battle(-1, day+1, teams[2].id, teams[3].id, 0, 0, []));
+        loadActiveBattles();
+        return;
+    }
     battlePrep = [];
     played = [];
     for (let i=0; i<teams.length; ++i){
