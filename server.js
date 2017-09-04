@@ -98,7 +98,11 @@ function runServer(competition){
             currentJudge = new Judge(connection, "", loginData.username, loginData.password, 0, (succ, curr) => {
                 success = succ;
                 currentJudge = curr;
-                socket.emit('l', succ, (succ && currentJudge.isAdmin), currentJudge.id);
+                if (succ){
+                    socket.emit('l', succ, (succ && currentJudge.isAdmin), currentJudge.id);
+                }else{
+                    socket.emit('l', 0, 0, -1);
+                }
             });
         });
         
