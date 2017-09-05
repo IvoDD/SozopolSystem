@@ -123,7 +123,7 @@ function runServer(competition){
         });
         
         socket.on('c', (battleId, challenges) => {
-            if (!(success && (currentJudge.isAdmin || checkAdmin(battles[indForBid[battleId]], currentJudge.id)))){console.log("unauthorized access try"); return;}
+            if (!(success && (currentJudge.isAdmin || checkAdmin(battles[indForBid[battleId]], currentJudge.id) || battles[indForBid[battleId]].day == maxd(battles)))){console.log("unauthorized access try"); return;}
             updateChallenges(competition.id, battleId, challenges, players, indForPid, teams, indForTid, battles, indForBid, () => {
                 io.emit('r', players, indForPid, teams, indForTid, battles, indForBid);
             });
