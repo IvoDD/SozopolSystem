@@ -151,6 +151,14 @@ function checkAdmin(battle, judgeId){
     return 0;
 }
 
+function maxd(battles){
+    let day=0;
+    for (let b of battles){
+        if (b.day > day){day = b.day;}
+    }
+    return day;
+}
+
 getProblemType = function(competition, day, problem){
     return problems[competition - 1][day - 1][problem - 1];
 }
