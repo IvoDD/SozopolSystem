@@ -41,23 +41,26 @@ getProblemType = function(competition, day, problem){
 }
 
 database.loadCompetitions(connection, competitions, ()=>{
-    let players = [], indForPid = [];
-    let battles = [], indForBid = [];
-    let judges = [];
-    database.loadPlayers(connection, competition.id, players, indForPid, () => {
-        for (let p of players){
-            p.alg = p.geo = p.numb = p.comb = 0;
-        }
-        database.loadBattles(connection, competition.id, battles, indForBid, () => {
-            for (let b of battles){
-                for (let chal of b.challenges){
-                    players[indForPid[chal.player1]][getProblemType(competition_id, battle.day, chal.problem)] += chal.points1;
-                    players[indForPid[chal.player2]][getProblemType(competition_id, battle.day, chal.problem)] += chal.points2;
-                }
-            }
+    for (let competition of competitions){
+        let players = [], indForPid = [];
+        let battles = [], indForBid = [];
+        let judges = [];
+        database.loadPlayers(connection, competition.id, players, indForPid, () => {
             for (let p of players){
-                database.updatePlayer(connection, p);
+                p.alg = p.geo = p.numb = p.comb = 0;
             }
+            database.loadBattles(connection, competition.id, battles, indForBid, () => {
+                for (let b of battles){
+                    for (let chal of b.challenges){
+                        players[indForPid[chal.player1]][getProblemType(competition.id, b.day, chal.problem)] += chal.points1;
+                        players[indForPid[chal.player2]][getProblemType(competition.id, b.day, chal.problem)] += chal.points2;
+                    }
+                }
+                for (let p of players){
+                    console.log(p.name);
+                    database.updatePlayer(connection, p);
+                }
+            });
         });
-    });
+    }
 });
