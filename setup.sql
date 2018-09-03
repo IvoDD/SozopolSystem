@@ -1,4 +1,4 @@
-CREATE DATABASE sozopol;
+CREATE DATABASE sozopol CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 USE sozopol;
 
 CREATE TABLE competitions (id int NOT NULL AUTO_INCREMENT, name varchar(255), port int, PRIMARY KEY(id), UNIQUE KEY(name), UNIQUE KEY(port));

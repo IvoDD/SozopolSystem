@@ -24,9 +24,9 @@ class Competiton{
     }
 };
 
-var competitions = [new Competiton('6-7 клас', 3005, 'grade67'),
-                   new Competiton('8-9 клас', 3006, 'grade89'),
-                   new Competiton('10-12 клас', 3007, 'grade1012')];
+var competitions = [new Competiton('6-7 клас', 3005, 'grade6-7'),
+                   new Competiton('8-9 клас', 3006, 'grade8-9'),
+                   new Competiton('10-12 клас', 3007, 'grade10-12')];
 
 var teams = xlsx.readFile('teams.xlsx');
 
@@ -40,9 +40,11 @@ connection.query("SELECT * FROM competitions", [], function(err, rows, fields){
         for (let i=0; i<competitions.length; ++i){
             console.log("INSERT INTO competitions (name, port) VALUES", competitions[i].name, competitions[i].port);
             connection.query("INSERT INTO competitions (name, port) VALUES (?, ?)", [competitions[i].name, competitions[i].port], function(){
+                //console.log("done");
                 let curr = teams.Sheets[competitions[i].sheet];
                 if (curr != undefined){
-                    for (let j=1; curr["A"+j] != undefined && curr["B"+j]!=undefined; ++j){                    
+                    for (let j=1; curr["A"+j] != undefined && curr["B"+j]!=undefined; ++j){
+                        //console.log(curr['A'+j].v);                    
                         connection.query("INSERT INTO teams (name, school, competition_id) VALUES (?, ?, ?)", [curr['A'+j].v, curr['B'+j].v, curr['C'+j].v]);
                         ++team_id;
                         for (let k = 68; curr[String.fromCharCode(k) + j] != undefined; ++k){
